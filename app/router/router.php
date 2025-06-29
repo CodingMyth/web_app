@@ -1,10 +1,9 @@
 <?php
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../models/Task.php';
-require_once __DIR__ . '/../controllers/AuthController.php';
-require_once __DIR__ . '/../controllers/TaskController.php';
-
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../Models/user.php';
+require_once __DIR__ . '/../Models/Task.php';
+require_once __DIR__ . '/../controller/authcontroller.php';
+require_once __DIR__ . '/../controller/TaskController.php';
 
 session_start();
 

@@ -22,10 +22,10 @@ class AuthController {
                 exit;
             } else {
                 $error = "Invalid username or password";
-                require_once 'views/auth/login.php';
+                require_once __DIR__ . '/../Views/auth/login.php';
             }
         } else {
-            require_once 'views/auth/login.php';
+            require_once __DIR__ . '/../Views/auth/login.php';
         }
     }
 
