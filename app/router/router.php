@@ -4,6 +4,7 @@ require_once __DIR__ . '/../Models/user.php';
 require_once __DIR__ . '/../Models/Task.php';
 require_once __DIR__ . '/../controller/authcontroller.php';
 require_once __DIR__ . '/../controller/TaskController.php';
+require_once __DIR__ . '/../config/function.php';
 
 session_start();
 

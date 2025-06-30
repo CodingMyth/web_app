@@ -9,13 +9,17 @@ class TaskController {
         $this->taskModel->user_id = $_SESSION['user_id'];
     }
 
-    public function index() {
+    //Shows all tasks for the logged-in user.
+    public function index(): void {
         $stmt = $this->taskModel->read();
         $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        require_once 'views/tasks/index.php';
+    
+      require_once __DIR__ . '/../Views/task/index.php';
     }
 
-    public function filter($priority) {
+
+    //Show tasks filtered by priority.
+    public function filter($priority): void {
         if (!in_array($priority, ['low', 'medium', 'high'])) {
             header('Location: /tasks');
             exit;
@@ -23,21 +27,27 @@ class TaskController {
 
         $stmt = $this->taskModel->readByPriority($priority);
         $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        require_once 'views/tasks/index.php';
+        require_once __DIR__ . '/../Views/task/index.php';
     }
 
-    public function create() {
-        require_once 'views/tasks/create.php';
+
+
+    //Show the create task form.
+    public function create(): void {
+        $errors = [];
+        require_once __DIR__ . '/../Views/task/create.php';
     }
 
-    public function store() {
+
+    //Handle task creation.
+    public function store(): void {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->taskModel->title = $_POST['title'];
             $this->taskModel->description = $_POST['description'];
             $this->taskModel->priority = $_POST['priority'];
             $this->taskModel->due_date = $_POST['due_date'];
 
-            // Validate
+            //valiadate input check
             $errors = [];
             if (empty($this->taskModel->title)) {
                 $errors[] = "Title is required";
@@ -51,7 +61,6 @@ class TaskController {
                     $errors[] = "Invalid due date format";
                 }
             }
-
             if (empty($errors)) {
                 if ($this->taskModel->create()) {
                     $_SESSION['success_message'] = "Task created successfully";
@@ -62,14 +71,16 @@ class TaskController {
                 }
             }
 
-            require_once 'views/tasks/create.php';
+            require_once __DIR__ . '/../Views/task/create.php';
         } else {
             header('Location: /tasks/create');
             exit;
         }
     }
 
-    public function edit($id) {
+
+    //do edit for a task
+    public function edit($id): void {
         $this->taskModel->id = $id;
         $task = $this->taskModel->readOne();
 
@@ -78,11 +89,30 @@ class TaskController {
             exit;
         }
 
-        require_once 'views/tasks/edit.php';
+    
+        require_once __DIR__ . '/../Views/task/edit.php';
     }
 
+
+
+    //Handle task update logic(mark as complete)
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            // Handle status-only update
+            if (isset($_POST['status']) && count($_POST) === 2) {
+            $this->taskModel->id = $id;
+            $this->taskModel->status = $_POST['status'];
+            if ($this->taskModel->update()) {
+                $_SESSION['success_message'] = "Task marked as completed";
+                header('Location: /tasks');
+                exit;
+            } else {
+                $_SESSION['error_message'] = "Failed to update status";
+                header('Location: /tasks');
+                exit;
+            }
+        }
             $this->taskModel->id = $id;
             $this->taskModel->title = $_POST['title'];
             $this->taskModel->description = $_POST['description'];
@@ -116,13 +146,15 @@ class TaskController {
             }
 
             $task = $this->taskModel->readOne();
-            require_once 'views/tasks/edit.php';
+            require_once __DIR__ . '/../Views/task/edit.php';
         } else {
             header('Location: /tasks');
             exit;
         }
     }
+    
 
+    //delete task
     public function delete($id) {
         $this->taskModel->id = $id;
         if ($this->taskModel->delete()) {

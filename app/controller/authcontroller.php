@@ -1,3 +1,6 @@
+//use supperglobal (array=session) to store information
+
+
 <?php
 class AuthController {
     private $userModel;
@@ -39,16 +42,18 @@ class AuthController {
             $errors = [];
             if (empty($this->userModel->username)) {
                 $errors[] = "Username is required";
+            } elseif (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', subject: $this->userModel->username)) {
+                $errors[] = "Username must be 3-20 characters and contain only letters, numbers, and underscores";
             }
             if (empty($this->userModel->email)) {
                 $errors[] = "Email is required";
-            } elseif (!filter_var($this->userModel->email, FILTER_VALIDATE_EMAIL)) {
+            } elseif (!preg_match('/^[\w\.-]+@[\w\.-]+\.\w{2,}$/', subject: $this->userModel->email)) {
                 $errors[] = "Invalid email format";
             }
             if (empty($this->userModel->password)) {
                 $errors[] = "Password is required";
-            } elseif (strlen($this->userModel->password) < 6) {
-                $errors[] = "Password must be at least 6 characters";
+            } elseif (!preg_match(pattern: '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+\-=\[\]{};\'\\:"|,.<>\/?]{6,}$/', subject: $this->userModel->password)) {
+                $errors[] = "Password must be at least 6 characters and contain at least one letter and one number";
             }
             if ($this->userModel->usernameExists()) {
                 $errors[] = "Username already taken";
@@ -67,9 +72,10 @@ class AuthController {
                 }
             }
 
-            require_once 'views/auth/register.php';
+        
+            require_once __DIR__ . '/../Views/auth/register.php';
         } else {
-            require_once 'views/auth/register.php';
+            require_once __DIR__ . '/../Views/auth/register.php';
         }
     }
 

@@ -1,7 +1,20 @@
-<?php require_once 'views/layouts/header.php'; ?>
+<?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="tasks-container">
     <h2>Create New Task</h2>
+
+    //display error If there are any errors (from server-side validation)
+    <?php if (!empty($error)): ?>
+    <div class="alert error"><?php echo htmlspecialchars($error); ?></div>
+<?php endif; ?>
+<?php if (!empty($errors)): ?>
+    <div class="alert error">
+        <?php foreach ($errors as $err): ?>
+            <div><?php echo htmlspecialchars($err); ?></div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
     
     <form action="/tasks/store" method="POST" id="taskForm">
         <input type="hidden" name="csrf_token" value="<?php echo generateCsrfToken(); ?>">
@@ -30,4 +43,4 @@
 </div>
 
 <script src="/assets/js/script.js"></script>
-<?php require_once 'views/layouts/footer.php'; ?>
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>

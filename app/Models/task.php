@@ -14,7 +14,8 @@ class Task {
     public function __construct($db) {
         $this->conn = $db;
     }
-
+    
+    //get data from current user
     public function read() {
         $query = "SELECT * FROM " . $this->table . " 
                   WHERE user_id = :user_id 
@@ -32,6 +33,9 @@ class Task {
         return $stmt;
     }
 
+
+
+    //Retrieves tasks for the current user filtered by a specific priority, ordered by due date.
     public function readByPriority($priority) {
         $query = "SELECT * FROM " . $this->table . " 
                   WHERE user_id = :user_id AND priority = :priority 
@@ -45,6 +49,8 @@ class Task {
         return $stmt;
     }
 
+
+    //Inserts a new task into the database for the current user.
     public function create() {
         $query = "INSERT INTO " . $this->table . " 
                   SET user_id = :user_id, title = :title, description = :description, 
@@ -70,6 +76,8 @@ class Task {
         return false;
     }
 
+
+    //Retrieves a single task by its ID and user ID.
     public function readOne() {
         $query = "SELECT * FROM " . $this->table . " 
                   WHERE id = :id AND user_id = :user_id LIMIT 1";
@@ -82,6 +90,8 @@ class Task {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+
+    //Updates an existing task in the database for the current user.
     public function update() {
         $query = "UPDATE " . $this->table . " 
                   SET title = :title, description = :description, priority = :priority, 
@@ -112,6 +122,8 @@ class Task {
         return false;
     }
 
+
+    //Deletes a task by its ID and user ID.
     public function delete() {
         $query = "DELETE FROM " . $this->table . " 
                   WHERE id = :id AND user_id = :user_id";

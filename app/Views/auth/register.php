@@ -1,4 +1,4 @@
-<?php require_once 'views/layouts/header.php'; ?>
+<?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="auth-container">
     <h2>Register</h2>
@@ -22,4 +22,4 @@
 </div>
 
 <script src="/assets/js/script.js"></script>
-<?php require_once 'views/layouts/footer.php'; ?>
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
